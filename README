@@ -1,0 +1,49 @@
+Web Technology project
+======================
+
+In this project we validate the claims made in the article 'A
+framework to balance privacy and data usability using data
+degradation' by Van Heerde et al.
+
+Starting out
+------------
+
+1. Install GIT (http://git-scm.com/download)
+
+2. Go the the directory where you want to add the project directory.
+
+3. Clone the GIT repo to the directory:
+
+git clone git@github.com:kpuputti/dbtech.git
+
+which creates a dbtech folder with the project content inside.
+
+Workflow
+--------
+
+- Always when you start out, pull the latest changes from the
+  upstream:
+
+git pull origin master
+
+- Make your changes.
+
+- See the diffs of your changes:
+
+git diff
+
+- Add your changes to be committed:
+
+git add file1 file2
+
+- Commit your changes:
+
+git commit -m "commit message"
+
+- Every once in a while, push your changes to the upstream:
+
+git push origin master
+
+- You can always see the status of your local repo by running:
+
+git status
