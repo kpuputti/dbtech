@@ -47,3 +47,16 @@ git push origin master
 - You can always see the status of your local repo by running:
 
 git status
+
+Documentation
+-------------
+
+Documentation is written using LaTeX. You can compile the .tex files
+by going to the corresponding directory and running:
+
+make
+
+which creates some extra files as well as the pdf file. You can clean
+the extra files created by LaTeX by running:
+
+make clean
