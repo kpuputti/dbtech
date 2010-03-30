@@ -6,4 +6,4 @@
 *.aux
 *.toc
 *.out
-doc/*.pdf
+*.pdf
