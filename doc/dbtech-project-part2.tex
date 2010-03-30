@@ -1,0 +1,132 @@
+\documentclass[a4paper,12pt,oneside,fleqn]{article}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[finnish, english]{babel}
+\usepackage{times}
+\usepackage[pdftex]{graphicx}
+\usepackage[left=35mm,right=20mm,top=20mm,bottom=25mm]{geometry}
+\usepackage{setspace}
+\usepackage{sectsty}
+\usepackage{fancyhdr}
+\usepackage{icomma}
+\usepackage{amssymb,amsmath}
+\usepackage[titles]{tocloft}
+\usepackage{ccaption}
+\usepackage{natbib}
+\usepackage{colortbl}
+\usepackage[none]{hyphenat}
+\sloppy
+
+\graphicspath{{figures/}}
+
+\setlength{\headheight}{10mm}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\singlespacing
+\newenvironment{equation_text}[0]
+{\begin{list}{}{\setlength{\leftmargin}{25mm}}}
+{\end{list}}
+
+\newcommand{\researchname}[0]{Part 2}
+
+\newcommand{\flabel}[1]{\label{fig:#1}}
+\newcommand{\tlabel}[1]{\label{tab:#1}}
+\newcommand{\elabel}[1]{\label{eq:#1}}
+\newcommand{\slabel}[1]{\label{sec:#1}}
+
+\newcommand{\fref}[1]{Figure~\ref{fig:#1}}
+\newcommand{\tref}[1]{Table~\ref{tab:#1}}
+\newcommand{\eref}[1]{Equation~\ref{eq:#1}}
+\newcommand{\sref}[1]{Section~\ref{sec:#1}}
+
+\newcommand{\tcaption}[1]{\caption{#1}\vspace{3mm}}
+
+\newenvironment{enu}
+{\begin{enumerate}
+	\setlength{\topsep}{0pt}
+  \setlength{\itemsep}{0pt}
+  \setlength{\partopsep}{0pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}}
+{\end{enumerate}}
+
+\newenvironment{ite}
+{\begin{itemize}
+	\setlength{\topsep}{0pt}
+  \setlength{\itemsep}{0pt}
+  \setlength{\partopsep}{0pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}}
+{\end{itemize}}
+
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\setcounter{tocdepth}{3}
+\setlength{\parskip}{0mm}
+\setlength{\parindent}{0mm}
+\setlength{\mathindent}{15mm}
+
+\sectionfont{\fontfamily{phv}\fontseries{b}\fontsize{16pt}{18pt}\selectfont\uppercase}
+\subsectionfont{\fontfamily{phv}\fontseries{b}\fontsize{14pt}{16pt}\selectfont}
+\subsubsectionfont{\fontfamily{phv}\fontseries{m}\fontsize{12pt}{16pt}\selectfont}
+
+\captiondelim{. }
+\captionstyle{\raggedright}
+\precaption{\hspace{5mm}}
+\captiontitlefont{\fontfamily{phv}\fontshape{it}\fontsize{11pt}{12pt}\selectfont}
+\bibpunct{/}{/}{,}{n}{}{,}
+
+\definecolor{lightgrey}{rgb}{.8,.8,.8}
+\definecolor{lightlightgrey}{rgb}{.9,.9,.9}
+\definecolor{darkgrey}{rgb}{.5,.5,.5}
+\definecolor{darkdarkgrey}{rgb}{.4,.4,.4}
+
+\begin{document}
+
+\renewcommand{\figurename}{\fontfamily{phv}\fontseries{b}\fontsize{11pt}{12pt}\selectfont Figure}
+\renewcommand{\tablename}{\fontfamily{phv}\fontseries{b}\fontsize{11pt}{12pt}\selectfont Table}
+
+% TITLE PAGE
+\thispagestyle{empty}
+\addtolength{\hoffset}{-5mm}
+\begin{flushleft}
+{\fontfamily{phv}\selectfont\textbf{EINDHOVEN UNIVERSITY OF TECHNOLOGY}} \\
+{\fontfamily{phv}\selectfont\textbf{Department of Mathematics and Computer Science}} \\
+{\fontfamily{phv}\selectfont\textbf{Department of Computer Science}} \\
+{\fontfamily{phv}\selectfont\textbf{2ID35 Database Technology}} \\
+{\fontfamily{phv}\selectfont\textbf{Project}} \\
+\end{flushleft}
+
+\vfill
+
+\begin{center}
+{\fontfamily{phv}\selectfont\textbf{\researchname}} \\
+%{\fontfamily{phv}\selectfont Supervisor: Title Supervisor name} \\
+\end{center}
+
+\vfill
+
+\begin{flushright}
+\begin{tabular}{l}
+{\fontfamily{phv}\selectfont In Eindhoven} \\
+{\fontfamily{phv}\selectfont 30.03.2010} \\
+{\fontfamily{phv}\selectfont Puputti Kimmo} \\
+%{\fontfamily{phv}\selectfont student number} \\
+{\fontfamily{phv}\selectfont k.p.puputti@student.tue.nl}
+\end{tabular}
+\end{flushright}
+\clearpage
+
+% SECTIONS
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\thepage}
+\setcounter{page}{1}
+\setstretch{1.1}
+
+\section{}
+
+
+\end{document}
