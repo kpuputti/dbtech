@@ -185,6 +185,24 @@ data is useful in the cases they presented.
 
 \section{Plan for verifying the claims}
 
+For evaluating the results of the article, we are going to use the
+proposed methods for data degradation for a part of the query log data
+set released by AOL a few years ago (
+http://techcrunch.com/2006/08/06/aol-proudly-releases-massive-amounts-of-user-search-data/
+).\\
 
+The query log contains 36 million records with five fields: id of the
+user, query string, time of the query, ranking of the clicked link,
+and the clicked link itself. The last two fields can be empty.\\
+
+The data set is analyzed using Python programming language. It some
+plots are needed for visualizing the results, Matplotlib Python
+plotting library ( http://matplotlib.sourceforge.net/ ) is used.\\
+
+We will provide means for calculating the worth of the data and the
+risk of the data automatically. We will then find the optimal common
+interest for the data and try to degrade it using the functions
+created. Then we will compare the results of the different levels of
+degradation to get comparable results.
 
 \end{document}
