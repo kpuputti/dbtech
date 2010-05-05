@@ -7,4 +7,6 @@
 *.toc
 *.out
 *.pdf
+*.bbl
+*.blg
 src/data/*
