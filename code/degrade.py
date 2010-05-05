@@ -6,6 +6,7 @@ where file is the name of the AOL data file.
 """
 
 
+from datetime import datetime
 import sys
 
 
@@ -23,7 +24,20 @@ def priv(datum):
 
 def main(file_name):
     with open(file_name) as file:
-        pass
+        for line in file:
+            # Skip the first line with column names.
+            if line.startswith('AnonID'):
+                continue
+            # Construct the datum from the columns.
+            anon_id, query, query_time, item_rank, click_url = line.split('\t')
+            datum = {
+                'anon_id': int(anon_id),
+                'query': query,
+                'query_time': datetime.strptime(query_time,
+                                                '%Y-%m-%d %H:%M:%S'),
+                'item_rank': item_rank or None,
+                'click_url': click_url.rstrip() or None,
+            }
     return 0
 
 
