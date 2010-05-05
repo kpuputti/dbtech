@@ -9,6 +9,18 @@ where file is the name of the AOL data file.
 import sys
 
 
+def totworth(datum):
+    pass
+
+
+def risk(datum):
+    pass
+
+
+def priv(datum):
+    pass
+
+
 def main(file_name):
     with open(file_name) as file:
         pass
