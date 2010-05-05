@@ -127,18 +127,56 @@
 \setstretch{1.1}
 
 \section{Motivation}
+With the increasing amount of web services available, privacy becomes
+a popular topic. An indication of how valuable personal data can be is
+the revenue made by Google, who can reach billion individuals while
+collecting, for example, their search queries. On the other hand,
+people benefit from services like Google. They can search the web and
+communicate with friends and family.\\
+
+Since these services are often free in terms of money, it does not
+mean the customer doesn't has to pay a price. They pay the price in
+terms of privacy. According to \cite{Jiang}, transparency is one of
+the key foundations of privacy. The user should know how his or her
+data is being treated, stored and to whom it will be disclosed. Then
+the user can estimate if the 'price' he pays is worth the service.\\
+
+Also, it is not that customers do not trust service providers, data
+can always be subject to third party attacks, government regulation
+etc. No service has been proven 100\% secure and still useable. Some
+examples are the servers of the Pentagon \cite{Pentagon} and FBI
+\cite{FBI}. \\
+
+This privacy violation will only increase with the growth of data
+collection. A way to reduce the privacy risk is to limit the data
+retention. Limited retention is a widely accepted privacy
+principle. It means that the data should not be stored longer than
+necessary to fulfill its purpose.\cite{hippocratic-dbs} However this
+limited retention is difficult to put in practise. How can we
+determine these retention periods? It might be a better idea to find a
+mechanism to balance privacy and usability, as is proposed in our
+paper. \cite{Heerde}\\
+
+Other proposals include making the data donors themselves responsible
+for protecting their data.\cite{Aggarwal} \cite{W3C} This is a good
+solution against server attacks, but leads to less accessability for
+the service providers and high communication costs. In addition
+security measures as data encryption, firewalls and intrusion
+detection can be used. But they can only make attacks harder, not
+prevent them. Finally anonymization may be a solution to prevent
+disclosure of privacy sensitive data. Major companies, such as Google
+\cite{Fleischer}, have already started using anonymization to improve
+the privacy of their users. Data degradation does not aim at
+generalizing identities, but can still be compared with respect to
+generalization techniques. But, correctly anonymizing can be a hard
+problem. AOL published and anonymized the IP addresses from which
+queries were issued, but was proven not enough when hackers inferred
+privacy sensitive facts. \cite{Hillyard} Data degradation will not be
+vulnerable to this, because the facts themselves will be degraded.
 
 
 
 \section{Research problems in the article}
-
-Traditionally service providers want to hold on to their data as long
-as possible. The data, after all, is the most valuable asset to
-them. However, with a lot of detailed and personal information about
-the users in a database, the users of the service often lose their
-privacy over the needs of the service providers. With a lot of
-personal data and the commonness of data breaches, the data can get
-into wrong hands if saved long enough.\\
 
 Normally companies have some fixed time that information is saved, and
 after the data is old enough, it is removed completely. This presents
@@ -147,7 +185,7 @@ removal of data is important for respecting the privacy of the
 users.\\
 
 With the service providers' and users' needs being the opposite of
-each other, a better was to save and remove data is needed. Van Heerde
+each other, a better way to save and remove data is needed. Van Heerde
 et al. propose a way to degrade the data over time, so that not all
 information is kept over time, but some parts of it is removed. This
 tries to be a compromise between the needs of the providers and the
@@ -169,19 +207,60 @@ these to a common interest.
 \section{Results in the article}
 
 The framework for data degradation described in the article by Van
-Heerde et al. used two functions for computing the common interest of
+Heerde et al. used two functions for computing the common interest  of
 the service providers and the users. First function computes the worth
 of storing the data for the service provider, and the second one
 computes the risk for involved for storing the data.\\
 
 With the defined functions, Van Heerde et al. were able to find the
-optimal retention period so that the common interest of the both
-parties was respected.\\
+optimal retention period $\delta_{opt}$ so that the common interest
+$CI(\delta_{opt})$ of the both parties was respected.\\
 
 The common interest of the two parties depends on many
-factors. Sometimes the decrease of worth is higher than the decrease
+factors. Sometimes the decrease of worth is higher than the increase
 in privacy. Van Heerde et al. showed that progressively degrading the
-data is useful in the cases they presented.
+data is useful in the cases they presented.\\
+
+The following functions were derived:
+
+\[
+    totworth(\vec\delta) = c \times \sum_{l=0}^{n-1}
+    \sum_{a=\delta_l}^{\delta_{l+1} + 1} wt_l(a)
+\]
+Where $c$ is a constant. $a,\delta$ range over age (time interval) and
+$l$ is the level of accuracy.
+\[
+    risk(\vec\delta) = c \times \sum_{l=0}^{n-1} r_l \times
+    (\delta_{l+1} - \delta_l)
+\]
+Where $r_l$ is the weight of the risk of storing a datum in level
+$L_l$, with $r_l$ such that $1 = r_0 \geq r_1 \geq \ldots \geq
+r_{n-1}$.
+\[
+    priv(\vec\delta) = \frac{1}{(s + risk(\vec\delta))}
+\]
+\[
+    CI(\vec\delta) = totworth(\vec\delta) \times priv(\vec\delta)
+\]
+
+The above functions were applied to $n = 4$, a monotonic descending
+function $wt_l(a)$ and some fixed values for $w_i$ and $r_i$. A script
+found the $\vec\delta$ for which common interest is maximal.  The
+following conclusions were drawn from the results:
+
+\begin{itemize}
+    \item Common interest is higher when progressively degradation ($n
+      > 1$) the data than with limited retention of accurate data
+      ($n=1$).
+
+    \item With $n > 1, \delta_1$ is smaller than the single $\delta$
+      with $n =1$. So it makes sense to degrade the data earlier to
+      achieve a higher common interest.
+
+    \item When $n = 4$, it turns out that $\delta_3 =
+      \delta_4$. Meaning it is not possible to achieve an higher
+      common interest with more than 3 degradation steps.
+\end{itemize}
 
 \section{Plan for verifying the claims}
 
@@ -195,7 +274,7 @@ The query log contains 36 million records with five fields: id of the
 user, query string, time of the query, ranking of the clicked link,
 and the clicked link itself. The last two fields can be empty.\\
 
-The data set is analyzed using Python programming language. It some
+The data set is analyzed using Python programming language. If some
 plots are needed for visualizing the results, Matplotlib Python
 plotting library ( http://matplotlib.sourceforge.net/ ) is used.\\
 
@@ -204,5 +283,9 @@ risk of the data automatically. We will then find the optimal common
 interest for the data and try to degrade it using the functions
 created. Then we will compare the results of the different levels of
 degradation to get comparable results.
+
+\nocite{*}
+\bibliography{mybib}
+\bibliographystyle{plain}
 
 \end{document}
