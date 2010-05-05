@@ -22,11 +22,16 @@ def priv(datum):
     pass
 
 
+def degrade(datum):
+    return datum
+
+
 def main(file_name):
     with open(file_name) as file:
         for line in file:
             # Skip the first line with column names.
             if line.startswith('AnonID'):
+                print line.rstrip()
                 continue
             # Construct the datum from the columns.
             anon_id, query, query_time, item_rank, click_url = line.split('\t')
@@ -38,6 +43,13 @@ def main(file_name):
                 'item_rank': item_rank or None,
                 'click_url': click_url.rstrip() or None,
             }
+            degraded = degrade(datum)
+            # Print out the degraded datum.
+            print '%d\t%s\t%s\t%s\t%s' % (degraded['anon_id'],
+                                          degraded['query'],
+                                          str(degraded['query_time']),
+                                          degraded['item_rank'] or '',
+                                          degraded['click_url'] or '')
     return 0
 
 
