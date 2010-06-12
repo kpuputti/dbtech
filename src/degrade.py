@@ -56,7 +56,12 @@ def wt(age, use_weight=True):
 
 def totworth(data, timestamp):
     """Total worth of the data to the service provider."""
-    return sum(wt(timestamp - datum[2]) for datum in data)
+    tsum = 0
+    for datum in data:
+        date = datum[2]
+        if date < timestamp:
+            tsum += wt(timestamp - date)
+    return tsum
 
 
 def risk(data):
@@ -82,6 +87,7 @@ def print_stats(data, timestamp, degradation_steps, risk_factor):
 
 
 def graph(values, title, xlabel, ylabel, file_name):
+    """Generate a graph of the provided values."""
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.plot([x for x, y in values], [y for x, y in values], 'o-')
@@ -95,16 +101,21 @@ def generate_graphs(data, timestamp, mindate, maxdate):
     weights = []
     worths = []
     worths_weighted = []
+    tot_worths = []
     for datum in data:
-        age = timestamp - datum[2]
+        date = datum[2]
+        age = timestamp - date
         dweight = weight(age)
         weights.append((age.days, dweight))
         worths.append((age.days, wt(age, use_weight=False)))
         worths_weighted.append((age.days, wt(age, use_weight=True)))
+        tot_worths.append((age.days, totworth(data, date)))
     graph(weights, 'weights', 'age', 'weight', 'weights.png')
     graph(worths, 'worths', 'age', 'worth', 'worths.png')
     graph(worths_weighted, 'worths with weights', 'age', 'worth',
           'worths_weighted.png')
+    graph(tot_worths, 'total worth of the db at certain point in time',
+          'days from the first date', 'total worth', 'tot_worths.png')
 
 
 def main(operation):
