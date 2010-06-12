@@ -295,10 +295,99 @@ following conclusions were drawn from the results:
 %% created. Then we will compare the results of the different levels of
 %% degradation to get comparable results.
 
+\subsection{Validating results of the article}
+
+We created a script \texttt{validate.py} (see Appendix A) that counts
+the CI, totworth, priv, and risk numbers for the data used in the
+article. By running the script we get the following output:
+
+\begin{verbatim}
+$python validate.py
+CI(d): 1.37136663791
+totworth(d): 61.7114987058
+priv(d): 0.0222222222222
+risk(d): 27.0
+\end{verbatim}
+
+which corresponds to the values obtained in the article.
+
+\subsection{Extending the article to a real world data set}
+
 We used a part of the AOL query log data
 set\footnote{\href{http://techcrunch.com/2006/08/06/aol-proudly-releases-massive-amounts-of-user-search-data/}{http://techcrunch.com/2006/08/06/aol-proudly-releases-massive-amounts-of-user-search-data/}}. We
 extracted the log data for one single user that had the most queries
-made within the period and that was not an automatically querying bot.
+made within the period and that was not an automatically querying
+bot. There are 3646 records with the earliest made on March 1 2006 and
+the latest made on May 31 2006.
+
+In the article, Van Heerde et. al made a simplifying assumption that
+the insert rate of data is constant over time. This does not reflect
+reality, and we tried to extend the techniques to data that has a
+random insert rate.
+
+We created a script \texttt{degrade.py} that can be run with the
+command:
+
+\begin{verbatim}
+python degrade.py graphs
+\end{verbatim}
+
+that creates several figures to the `output' directory. Some of the
+created figures are shown in \fref{ages}, \fref{worths},
+\fref{privacies}, \fref{totworths}, and \fref{cinterests}.
+
+\begin{figure}[h]
+\includegraphics[width=\linewidth]{img/ages.png}
+\caption{Data items inserted per day.}
+\flabel{ages}
+\end{figure}
+
+\begin{figure}[h]
+\includegraphics[width=\linewidth]{img/worths.png}
+\caption{Worths of data items.}
+\flabel{worths}
+\end{figure}
+
+\begin{figure}[h]
+\includegraphics[width=\linewidth]{img/privacies.png}
+\caption{Privacy of the data items.}
+\flabel{privacies}
+\end{figure}
+
+\begin{figure}[h]
+\includegraphics[width=\linewidth]{img/tot_worths.png}
+\caption{Total worth of the data items.}
+\flabel{totworths}
+\end{figure}
+
+\begin{figure}[h]
+\includegraphics[width=\linewidth]{img/common_interests.png}
+\caption{Common interest for the data items.}
+\flabel{cinterests}
+\end{figure}
+
+\clearpage
+\section{Results}
+
+As can be seen from \fref{cinterests}, there is something weird
+happening in the common interest values. There should be a single
+point where the common interest value is higher than in points before
+or after it. However, our graph has several local maximums and a large
+spike at the end of it. We expect this to be a mistake in applying the
+techniques of a constant insert rate data to a randomly inserted
+data. It is also possible that there is something wrong in our
+calculations. However, \fref{privacies} and \fref{totworths} indicate
+that the graphs are of the right shape compared to the ones in the
+article. Therefore, mistakes in our methodologies might have happened
+in combining the privacy and total worth values to calculate the
+common interest values.\\
+
+Apart from our inability to extend the results to a randomly inserted
+data, we still claim to believe that the methodologies of Van Heerde
+et. al. are applicable to any kind of data set. The all-or-nothing
+method should always be worse than data degradation, and both the
+service providers and the users can make a compromise that benefits
+both parties.
 
 \clearpage
 \nocite{*}
