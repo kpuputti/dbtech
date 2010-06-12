@@ -10,3 +10,4 @@
 *.bbl
 *.blg
 src/data/*
+src/output/*
