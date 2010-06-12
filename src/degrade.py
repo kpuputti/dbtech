@@ -85,7 +85,8 @@ def totworth(data, timestamp):
     for datum in data:
         date = datum[2]
         if date < timestamp:
-            tsum += wt(timestamp - date)
+            delta = timestamp - date
+            tsum += wt(delta)
     return tsum
 
 
@@ -95,7 +96,7 @@ def risk(data, timestamp):
     for datum in data:
         date = datum[2]
         if date < timestamp:
-            delta = date - timestamp
+            delta = timestamp - date
             tsum += get_risk_factor(delta)
     return tsum / len(data)
 
@@ -120,7 +121,7 @@ def print_stats(data, timestamp, degradation_steps, risk_factor):
 def graph(values, title, xlabel, ylabel, file_name, xticks=None):
     """Generate a graph of the provided values."""
     if xticks is None:
-        xticks = [21, 42, 63, 84]
+        xticks = (21, 42, 63, 84)
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.plot([x for x, y in values], [y for x, y in values], 'o-')
@@ -136,24 +137,29 @@ def generate_graphs(data, timestamp, mindate, maxdate):
     ages = []
     for i in xrange(100):
         ages.append([i, 0])
+
     weights = []
     worths = []
     worths_weighted = []
     tot_worths = []
     risks = []
     privacies = []
+    common_interests = []
+
     for datum in data:
         date = datum[2]
+        assert date <= timestamp
         age = timestamp - date
-        days = (date - mindate).days
-        ages[age.days][1] += 1
+        retention_period = date - mindate
 
+        ages[age.days][1] += 1
         weights.append((age.days, get_weight(age)))
         worths.append((age.days, wt(age, use_weight=False)))
         worths_weighted.append((age.days, wt(age, use_weight=True)))
-        tot_worths.append((age.days, totworth(data, date)))
-        risks.append((days, risk(data, date)))
-        privacies.append((days, priv(data, date)))
+        tot_worths.append((retention_period.days, totworth(data, date)))
+        risks.append((retention_period.days, risk(data, date)))
+        privacies.append((retention_period.days, priv(data, date)))
+        #common_interests.append((age.days, CI(data, date)))
 
     graph(ages, 'number of data items per day', 'days from the first date', 'count',
           'ages.png')
@@ -163,7 +169,7 @@ def generate_graphs(data, timestamp, mindate, maxdate):
           'worths_weighted.png')
     graph(tot_worths, 'total worth of the db at certain point in time',
           'days from the first date', 'total worth', 'tot_worths.png',
-          [7, 28, 49, 70, 91])
+          (7, 28, 49, 70, 91))
     graph(privacies, 'privacy value at certain point in time',
           'days from the first date', 'privacy value', 'privacies.png')
     graph(risks, 'risk value at certain point in time',
