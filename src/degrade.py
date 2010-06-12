@@ -29,7 +29,15 @@ def get_data():
     return data
 
 
-def weight(age):
+def normalize(values, scale_max=100):
+    """Normalize a list of values to be within 0 and scale_max."""
+    max_item = max(values)
+    min_item = min(values)
+    delta = float(max_item - min_item)
+    return [((v - min_item) / delta) * scale_max for v in values]
+
+
+def get_weight(age):
     """The weight factor for the given age."""
     days = age.days
     if days < 21:
@@ -46,12 +54,29 @@ def weight(age):
         return 0.1
 
 
+def get_risk_factor(age):
+    """The risk factor for the given age."""
+    days = age.days
+    if days < 21:
+        # Under 3 weeks old.
+        return 1
+    elif days < 42:
+        # 3 to 6 weeks old.
+        return 0.2
+    elif days < 63:
+        # 6 to 9 weeks old.
+        return 0.1
+    else:
+        # Over 9 weeks old.
+        return 0.05
+
+
 def wt(age, use_weight=True):
     """Worth of one datum to the service provider."""
+    weight = 1
     if use_weight:
-        return weight(age) * (1 + math.cos((age.days * math.pi) / 180))
-    else:
-        return (1 + math.cos((age.days * math.pi) / 180))
+        weight = get_weight(age)
+    return weight * (1 + math.cos((age.days * math.pi) / 180))
 
 
 def totworth(data, timestamp):
@@ -64,14 +89,20 @@ def totworth(data, timestamp):
     return tsum
 
 
-def risk(data):
+def risk(data, timestamp):
     """Risk factor of the data for the user."""
-    return len(data)
+    tsum = 0.0
+    for datum in data:
+        date = datum[2]
+        if date < timestamp:
+            delta = date - timestamp
+            tsum += get_risk_factor(delta)
+    return tsum / len(data)
 
 
-def priv(data):
+def priv(data, timestamp):
     """Privacy guarantee of the data to the user."""
-    return 1 / (SMOOTHING_FACTOR * risk(data))
+    return 1 / float(SMOOTHING_FACTOR + risk(data, timestamp))
 
 
 def CI(data, timestamp):
@@ -86,36 +117,57 @@ def print_stats(data, timestamp, degradation_steps, risk_factor):
     print ''
 
 
-def graph(values, title, xlabel, ylabel, file_name):
+def graph(values, title, xlabel, ylabel, file_name, xticks=None):
     """Generate a graph of the provided values."""
+    if xticks is None:
+        xticks = [21, 42, 63, 84]
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.plot([x for x, y in values], [y for x, y in values], 'o-')
     ax.set_title(title)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
+    ax.grid(True)
+    plt.xticks(xticks)
     fig.savefig('output/%s' % file_name)
 
 
 def generate_graphs(data, timestamp, mindate, maxdate):
+    ages = []
+    for i in xrange(100):
+        ages.append([i, 0])
     weights = []
     worths = []
     worths_weighted = []
     tot_worths = []
+    risks = []
+    privacies = []
     for datum in data:
         date = datum[2]
         age = timestamp - date
-        dweight = weight(age)
-        weights.append((age.days, dweight))
+        days = (date - mindate).days
+        ages[age.days][1] += 1
+
+        weights.append((age.days, get_weight(age)))
         worths.append((age.days, wt(age, use_weight=False)))
         worths_weighted.append((age.days, wt(age, use_weight=True)))
         tot_worths.append((age.days, totworth(data, date)))
+        risks.append((days, risk(data, date)))
+        privacies.append((days, priv(data, date)))
+
+    graph(ages, 'number of data items per day', 'days from the first date', 'count',
+          'ages.png')
     graph(weights, 'weights', 'age', 'weight', 'weights.png')
     graph(worths, 'worths', 'age', 'worth', 'worths.png')
     graph(worths_weighted, 'worths with weights', 'age', 'worth',
           'worths_weighted.png')
     graph(tot_worths, 'total worth of the db at certain point in time',
-          'days from the first date', 'total worth', 'tot_worths.png')
+          'days from the first date', 'total worth', 'tot_worths.png',
+          [7, 28, 49, 70, 91])
+    graph(privacies, 'privacy value at certain point in time',
+          'days from the first date', 'privacy value', 'privacies.png')
+    graph(risks, 'risk value at certain point in time',
+          'days from the first date', 'risk value', 'risks.png')
 
 
 def main(operation):
