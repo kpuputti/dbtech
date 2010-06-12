@@ -46,9 +46,12 @@ def weight(age):
         return 0.1
 
 
-def wt(age):
+def wt(age, use_weight=True):
     """Worth of one datum to the service provider."""
-    return weight(age) * (1 + math.cos((age.days * math.pi) / 180))
+    if use_weight:
+        return weight(age) * (1 + math.cos((age.days * math.pi) / 180))
+    else:
+        return (1 + math.cos((age.days * math.pi) / 180))
 
 
 def totworth(data, timestamp):
@@ -90,11 +93,19 @@ def graph(values, title, xlabel, ylabel, file_name):
 
 def generate_graphs(data, timestamp, mindate, maxdate):
     weights = []
+    worths = []
+    worths_weighted = []
     for datum in data:
         age = timestamp - datum[2]
         dweight = weight(age)
         weights.append((age.days, dweight))
+        worths.append((age.days, wt(age, use_weight=False)))
+        worths_weighted.append((age.days, wt(age, use_weight=True)))
     graph(weights, 'weights', 'age', 'weight', 'weights.png')
+    graph(worths, 'worths', 'age', 'worth', 'worths.png')
+    graph(worths_weighted, 'worths with weights', 'age', 'worth',
+          'worths_weighted.png')
+
 
 def main(operation):
     weights = (1, 0.3, 0.2, 0.1)
